@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sesli Asistan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .widget-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 600px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .iframe-wrapper {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 15px;
+        }
+
+        .info-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f4f8;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            list-style-position: inside;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .info-box li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .widget-container {
+                min-height: 500px;
+            }
+
+            .iframe-wrapper {
+                height: 500px;
+            }
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 600px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ AI Sesli Asistan</h1>
+        <p class="subtitle">ElevenLabs ile desteklenen akıllı sesli asistanınız</p>
+        
+        <div class="widget-container">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <span>Asistan yükleniyor...</span>
+            </div>
+            <iframe 
+                id="assistant-iframe"
+                class="iframe-wrapper" 
+                src="https://elevenlabs.io/app/talk-to?agent_id=agent_5401kcnp2mg0fqsr307ycev535t2&branch_id=agtbrch_9801kcnp2nc9fkq9mazt283ne57g"
+                style="display: none;"
+                allow="microphone; autoplay"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="info-box">
+            <h3>📋 Kullanım Bilgileri:</h3>
+            <ul>
+                <li>Mikrofon erişimi için tarayıcınızdan izin vermeniz gerekebilir</li>
+                <li>Sesli asistanla konuşmak için mikrofon butonuna tıklayın</li>
+                <li>En iyi deneyim için sessiz bir ortamda kullanın</li>
+                <li>Chrome, Firefox veya Safari tarayıcıları önerilir</li>
+                <li>Mobil cihazlarda da sorunsuz çalışır</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Iframe yüklendiğinde loading ekranını gizle
+        const iframe = document.getElementById('assistant-iframe');
+        const loading = document.getElementById('loading');
+
+        iframe.onload = function() {
+            loading.style.display = 'none';
+            iframe.style.display = 'block';
+        };
+
+        // Hata durumunda alternatif mesaj göster
+        iframe.onerror = function() {
+            loading.innerHTML = '<div style="color: #e74c3c;">⚠️ Asistan yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.</div>';
+        };
+
+        // Timeout - 10 saniye sonra hala yüklenmediyse uyarı göster
+        setTimeout(function() {
+            if (loading.style.display !== 'none') {
+                loading.innerHTML = '<div>Yükleme biraz uzun sürüyor... Lütfen bekleyin veya sayfayı yenileyin.</div>';
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
