@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Sesli Asistan</title>
+    
     <style>
         * {
             margin: 0;
@@ -27,7 +28,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
-            max-width: 900px;
+            max-width: 1200px;
             width: 100%;
             text-align: center;
         }
@@ -40,54 +41,46 @@
 
         .subtitle {
             color: #666;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             font-size: 1.1em;
         }
 
-        .main-button-container {
-            margin: 40px 0;
-        }
-
-        .launch-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 25px 60px;
-            font-size: 1.5em;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s ease;
-            display: inline-flex;
+        .assistant-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 15px;
-            font-weight: 600;
+            justify-content: center;
+            position: relative;
         }
 
-        .launch-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        .assistant-info {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        .launch-button:active {
-            transform: translateY(-2px);
+        .assistant-info h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 10px;
         }
 
-        .microphone-icon {
-            width: 40px;
-            height: 40px;
-            animation: pulse 2s infinite;
+        .assistant-info p {
+            color: #666;
+            font-size: 1em;
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
+        /* Widget container styling */
+        .widget-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
         }
 
         .features-grid {
@@ -102,12 +95,12 @@
             padding: 25px;
             border-radius: 15px;
             text-align: left;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
 
         .feature-icon {
@@ -154,32 +147,6 @@
             padding-left: 10px;
         }
 
-        .status-message {
-            margin-top: 20px;
-            padding: 15px;
-            background: #d4edda;
-            color: #155724;
-            border-radius: 10px;
-            border: 1px solid #c3e6cb;
-            display: none;
-        }
-
-        .status-message.show {
-            display: block;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -189,20 +156,38 @@
                 font-size: 1.8em;
             }
 
-            .launch-button {
-                padding: 20px 40px;
-                font-size: 1.2em;
-            }
-
             .features-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .assistant-container {
+                padding: 20px;
             }
         }
 
         .footer {
             margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
             color: #999;
             font-size: 0.9em;
+        }
+
+        /* Loading animation */
+        .loading-indicator {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px 0;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -211,18 +196,16 @@
         <h1>🎙️ AI Sesli Asistan</h1>
         <p class="subtitle">ElevenLabs ile desteklenen akıllı sesli asistanınız</p>
         
-        <div class="main-button-container">
-            <button class="launch-button" onclick="launchAssistant()">
-                <svg class="microphone-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-                </svg>
-                Asistanı Başlat
-            </button>
-        </div>
-
-        <div class="status-message" id="statusMessage">
-            ✅ Asistan yeni sekmede açılıyor...
+        <div class="assistant-container">
+            <div class="assistant-info">
+                <h2>Sesli Asistanınız Hazır</h2>
+                <p>Konuşmaya başlamak için aşağıdaki mikrofon simgesine tıklayın</p>
+            </div>
+            
+            <div class="widget-wrapper">
+                <!-- ElevenLabs Conversational AI Widget -->
+                <elevenlabs-convai agent-id="agent_5401kcnp2mg0fqsr307ycev535t2"></elevenlabs-convai>
+            </div>
         </div>
 
         <div class="features-grid">
@@ -243,7 +226,6 @@
             </div>
 
             <div class="feature-card">
-                <div class="feature-card">
                 <div class="feature-icon">🔒</div>
                 <div class="feature-title">Güvenli İletişim</div>
                 <div class="feature-description">
@@ -255,11 +237,12 @@
         <div class="info-box">
             <h3>📋 Kullanım Talimatları</h3>
             <ul>
-                <li><strong>🎤 Mikrofon İzni:</strong> Asistan ilk açıldığında tarayıcınızdan mikrofon izni isteyecektir</li>
-                <li><strong>🔊 Ses Ayarları:</strong> En iyi deneyim için sessiz bir ortamda kullanın</li>
-                <li><strong>🌐 Tarayıcı Desteği:</strong> Chrome, Firefox, Safari ve Edge desteklenir</li>
+                <li><strong>🎤 Mikrofon İzni:</strong> İlk kullanımda tarayıcınız mikrofon izni isteyecektir - "İzin Ver" seçeneğini seçin</li>
+                <li><strong>🗣️ Konuşma:</strong> Widget yüklendikten sonra mikrofon simgesine tıklayarak konuşmaya başlayın</li>
+                <li><strong>🔊 Ses Kalitesi:</strong> En iyi deneyim için sessiz bir ortamda kullanın</li>
+                <li><strong>🌐 Tarayıcı Desteği:</strong> Chrome, Firefox, Safari ve Edge tarayıcıları desteklenir</li>
                 <li><strong>📱 Mobil Uyumlu:</strong> Mobil cihazlardan da sorunsuz kullanabilirsiniz</li>
-                <li><strong>🔄 Yeniden Başlatma:</strong> Herhangi bir sorun yaşarsanız butona tekrar tıklayın</li>
+                <li><strong>🔄 Sorun Giderme:</strong> Widget yüklenmezse sayfayı yenileyin</li>
             </ul>
         </div>
 
@@ -269,44 +252,20 @@
     </div>
 
     <script>
-        const assistantURL = 'https://elevenlabs.io/app/talk-to?agent_id=agent_5401kcnp2mg0fqsr307ycev535t2&branch_id=agtbrch_9801kcnp2nc9fkq9mazt283ne57g';
+        // Widget yükleme kontrolü
+        window.addEventListener('load', function() {
+            console.log('ElevenLabs Widget yüklendi');
+        });
 
-        function launchAssistant() {
-            // Durum mesajını göster
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.classList.add('show');
-
-            // Yeni sekmede aç
-            const newWindow = window.open(assistantURL, '_blank', 'noopener,noreferrer');
-
-            // Popup blocker kontrolü
-            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-                statusMessage.style.background = '#fff3cd';
-                statusMessage.style.color = '#856404';
-                statusMessage.style.borderColor = '#ffeaa7';
-                statusMessage.innerHTML = '⚠️ Popup engelleyici algılandı! Lütfen popup\'ları etkinleştirin veya <a href="' + assistantURL + '" target="_blank" style="color: #667eea; font-weight: bold;">buraya tıklayın</a>.';
-            } else {
-                // 3 saniye sonra mesajı gizle
-                setTimeout(() => {
-                    statusMessage.classList.remove('show');
-                }, 3000);
-            }
-
-            // Animasyon efekti
-            const button = event.target.closest('.launch-button');
-            button.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                button.style.transform = '';
-            }, 200);
-        }
-
-        // Keyboard shortcut - Space tuşuna basınca aç
-        document.addEventListener('keydown', function(event) {
-            if (event.code === 'Space' && event.target === document.body) {
-                event.preventDefault();
-                launchAssistant();
+        // Hata yakalama
+        window.addEventListener('error', function(e) {
+            if (e.message.includes('elevenlabs')) {
+                console.error('Widget yükleme hatası:', e);
             }
         });
     </script>
+    
+    <!-- ElevenLabs Widget Script -->
+    <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 </body>
 </html>
